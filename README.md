@@ -1,73 +1,115 @@
-# React + TypeScript + Vite
+# Заняття 8 - Форми з Formik
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- Бібліотека [Formik](https://formik.org/)
+- Контейнер форми `Formik` та `Form`
+  - Пропс `initialValues`
+  - Пропс `onSubmit`
+- Поля форми `Field`
+  - Атрибут `name`
+- Стилізація компонентів `Formik`
+- Типізація `initialValues`
+- Параметри `values` та `actions` у `onSubmit`
+- Типи полів через пропс `as`
+- Доступ до властивостей `Formik` у JSX через Render Prop
+- Валідація з [`Yup`](https://github.com/jquense/yup)
+  - Схема валідаціі
+  - Можливі аргументи функції-валідатора
+  - Пропс `validationSchema`
+- Компонент `ErrorMessage`
+  - Пропс `component`
 
-Currently, two official plugins are available:
+## Повна форма
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```tsx
+export default function OrderForm() {
+  const fieldId = useId();
 
-## React Compiler
+  return (
+    <form className={css.form}>
+      <fieldset className={css.fieldset}>
+        <legend className={css.legend}>Client Info</legend>
+        <label htmlFor={`${fieldId}-username`} className={css.label}>
+          Name
+        </label>
+        <input
+          type="text"
+          name="username"
+          id={`${fieldId}-username`}
+          className={css.input}
+        />
+        <label htmlFor={`${fieldId}-email`} className={css.label}>
+          Email
+        </label>
+        <input
+          type="email"
+          name="email"
+          id={`${fieldId}-email`}
+          className={css.input}
+        />
+      </fieldset>
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+      <fieldset className={css.fieldset}>
+        <legend className={css.legend}>Delivery method</legend>
 
-## Expanding the ESLint configuration
+        <label className={css.option}>
+          <input type="radio" name="delivery" value="pickup" />
+          Pickup
+        </label>
+        <label className={css.option}>
+          <input type="radio" name="delivery" value="courier" />
+          Courier
+        </label>
+        <label className={css.option}>
+          <input type="radio" name="delivery" value="drone" />
+          Drone delivery
+        </label>
+      </fieldset>
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+      <fieldset className={css.fieldset}>
+        <legend className={css.legend}>Dietary restrictions</legend>
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+        <label className={css.option}>
+          <input type="checkbox" name="restrictions" value="vegan" />
+          Vegan
+        </label>
+        <label className={css.option}>
+          <input type="checkbox" name="restrictions" value="gluten-free" />
+          Gluten-free
+        </label>
+        <label className={css.option}>
+          <input type="checkbox" name="restrictions" value="nut-free" />
+          Nut-free
+        </label>
+      </fieldset>
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+      <label htmlFor={`${fieldId}-deliveryTime`} className={css.label}>
+        Preferred delivery time
+      </label>
+      <select
+        name="deliveryTime"
+        id={`${fieldId}-deliveryTime`}
+        className={css.input}
+      >
+        <option value="">-- Choose delivery time --</option>
+        <option value="morning">Morning (8:00-12:00)</option>
+        <option value="afternoon">Afternoon (12:00-16:00)</option>
+        <option value="evening">Evening (16:00-20:00)</option>
+      </select>
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+      <label htmlFor={`${fieldId}-message`} className={css.label}>
+        Additional message
+      </label>
+      <textarea
+        name="message"
+        rows={4}
+        id={`${fieldId}-message`}
+        className={css.textarea}
+      ></textarea>
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+      <button type="submit" className={css.button}>
+        Place order
+      </button>
+    </form>
+  );
+}
 ```
